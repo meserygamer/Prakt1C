@@ -8,6 +8,7 @@
 void startInfoToConsole();
 int taskSelection();
 double* solutionQuadraticEquation(double a, double b, double c);
+int solutionNumberOfObjectPermutations(int NumberOfObjects);
 
 #pragma endregion
 
@@ -15,7 +16,6 @@ int main()
 {
 	startInfoToConsole(); //Настройка консоли и вывод стартовой информации
 	int userChoice = taskSelection(); //Выбор пользователем задачи 
-	solutionQuadraticEquation(1, 4, 3);
 	return 0;
 }
 
@@ -60,4 +60,11 @@ double* solutionQuadraticEquation(double a, double b, double c)
 	quadraticEquationResult[0] = (-b + sqrt(D)) / (2 * a);
 	quadraticEquationResult[1] = (-b - sqrt(D)) / (2 * a);
 	return quadraticEquationResult;
+}
+
+int solutionNumberOfObjectPermutations(int NumberOfObjects)
+{
+	int factorial = 1;
+	for (int number = 1; number <= NumberOfObjects; number++) factorial *= number;
+	return factorial;
 }
