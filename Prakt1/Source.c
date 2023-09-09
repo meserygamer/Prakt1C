@@ -7,10 +7,16 @@
 
 void startInfoToConsole();
 int taskSelection();
-double* solutionQuadraticEquation(double a, double b, double c);
+double* solutionQuadraticEquation(double* coefVector);
 int solutionNumberOfObjectPermutations(int NumberOfObjects);
 double* solvingSystemOfTwoLinearEquations(double** TwoLinearEquationsMatrix);
 void startCalculate(int userChoice);
+double* userInputQuadraticEquation();
+double** userInputSystemOfTwoLinearEquations();
+int userInputNumberOfObjectPermutations();
+void outputQuadraticEquation(double* resultQuadraticEquation);
+void outputSystemOfTwoLinearEquations(double* resultSystemOfTwoLinearEquations);
+void outputNumberOfObjectPermutations(int resultNumberOfObjectPermutations);
 
 #pragma endregion
 
@@ -19,20 +25,9 @@ int main()
 	startInfoToConsole(); //Настройка консоли и вывод стартовой информации
 	int userChoice = taskSelection(); //Выбор пользователем задачи 
 	startCalculate(userChoice); //Начало решения задачи
-
-	/*double** Test;
-	Test = (double**)malloc(sizeof(double*) * 2);
-	Test[0] = (double*)malloc(sizeof(double) * 3);
-	Test[0][0] = 1;
-	Test[0][1] = 5;
-	Test[0][2] = -7;
-	Test[1] = (double*)malloc(sizeof(double) * 3);
-	Test[1][0] = 3;
-	Test[1][1] = -2;
-	Test[1][2] = -4;
-	solvingSystemOfTwoLinearEquations(Test);*/
 	return 0;
 }
+
 /// <summary>
 /// Настройка консоли и вывод стартовой информации
 /// </summary>
@@ -56,6 +51,7 @@ int taskSelection()
 		while ((getchar()) != '\n'); //Отчистка входного потока
 		if (userChoice >= 1 && userChoice <= 3)
 		{
+			system("cls");
 			switch (userChoice)
 			{
 			case 1:
@@ -65,7 +61,7 @@ int taskSelection()
 				printf("Вы выбрали задачу на решение системы двух линейных уравнений\n");
 				break;
 			case 3:
-				printf("Вы выбрали задачу на подсчет количества перестановок");
+				printf("Вы выбрали задачу на подсчет количества перестановок\n");
 				break;
 			}
 			return userChoice;
@@ -83,71 +79,99 @@ void startCalculate(int userChoice)
 	switch (userChoice)
 	{
 	case 1:
-		printf("Введите коэффициенты квадратного уравнения через пробел (Маска ввода: a b c) \n");
-		double a, b, c;
-		int rightNumberCount;
-		do
-		{
-			rightNumberCount = scanf_s("%lf %lf %lf", a, b, c);
-			if(rightNumberCount != 3)
-			{
-				printf("Одно или несколько значений не соответствуют маске, повторите ввод");
-				while ((getchar()) != '\n');
-			}
-		} while (rightNumberCount != 3);
-		//
+		outputQuadraticEquation(solutionQuadraticEquation(userInputQuadraticEquation()));
 		break;
 	case 2:
-		printf("Введите коэффициенты линейных уравнений через пробел (Маска ввода: a1 b1 c1 a2 b2 c2) \n");
-		double** twoLinearEquationsMatrix =  (double**)malloc(sizeof(double*) * 2);
-		int rightNumberCount;
-		for (int i = 0; i < 2; i++)
-		{
-			twoLinearEquationsMatrix[i] = (double*)malloc(sizeof(double) * 3);
-		}
-		do
-		{
-			rightNumberCount = scanf_s("%lf %lf %lf %lf %lf %lf", twoLinearEquationsMatrix[0][0]
-			,twoLinearEquationsMatrix[0][1], twoLinearEquationsMatrix[0][2], twoLinearEquationsMatrix[1][0]
-			,twoLinearEquationsMatrix[1][1], twoLinearEquationsMatrix[1][2]);
-			if (rightNumberCount != 6)
-			{
-				printf("Одно или несколько значений не соответствуют маске, повторите ввод");
-				while ((getchar()) != '\n');
-			}
-		} while (rightNumberCount != 6);
+		outputSystemOfTwoLinearEquations(solvingSystemOfTwoLinearEquations(userInputSystemOfTwoLinearEquations()));
 		break;
-		//
 	case 3:
-		printf("Введите количество предметов, для расчета количества вариантов перестановок \n");
-		int NumberOfObjects, rightNumberCount;
-		do
-		{
-			rightNumberCount = scanf_s("%d", NumberOfObjects);
-			if (rightNumberCount != 1)
-			{
-				printf("Введенное значение не является числом, повторите ввод");
-				while ((getchar()) != '\n');
-			}
-			else
-			{
-				if (NumberOfObjects < 0)
-				{
-					printf("Введено отрицательное количество объектов, повторите ввод");
-				}
-			}
-		} while (rightNumberCount != 1 || NumberOfObjects < 0);
-		//
+		outputNumberOfObjectPermutations(solutionNumberOfObjectPermutations(userInputNumberOfObjectPermutations()));
 		break;
 	}
 }
 
-double* solutionQuadraticEquation(double a, double b, double c)
+#pragma region Функции обработки пользовательского ввода параметров для задач
+/// <summary>
+/// Функция обработки пользовательского ввода для задачи решения квадратного уравнения
+/// </summary>
+double* userInputQuadraticEquation()
 {
-	double D = pow(b, 2) - 4 * a * c;
+	printf("Введите коэффициенты квадратного уравнения через пробел (Маска ввода: a b c) \n");
+	double* userInput = (double*)malloc(sizeof(double) * 3);
+	int rightNumberCount;
+	do
+	{
+		rightNumberCount = scanf_s("%lf %lf %lf", &userInput[0], &userInput[1], &userInput[2]);
+		if (rightNumberCount != 3)
+		{
+			printf("Одно или несколько значений не соответствуют маске, повторите ввод\n");
+			while ((getchar()) != '\n');
+		}
+	} while (rightNumberCount != 3);
+	return userInput;
+}
+
+/// <summary>
+/// Функция обработки пользовательского ввода для задачи решения системы двух линейных уравнений
+/// </summary>
+double** userInputSystemOfTwoLinearEquations()
+{
+	printf("Введите коэффициенты линейных уравнений через пробел (Маска ввода: a1 b1 c1 a2 b2 c2) \n");
+	double** twoLinearEquationsMatrix = (double**)malloc(sizeof(double*) * 2);
+	int rightNumberCount;
+	for (int i = 0; i < 2; i++)
+	{
+		twoLinearEquationsMatrix[i] = (double*)malloc(sizeof(double) * 3);
+	}
+	do
+	{
+		rightNumberCount = scanf_s("%lf %lf %lf %lf %lf %lf", &twoLinearEquationsMatrix[0][0]
+			, &twoLinearEquationsMatrix[0][1], &twoLinearEquationsMatrix[0][2], &twoLinearEquationsMatrix[1][0]
+			, &twoLinearEquationsMatrix[1][1], &twoLinearEquationsMatrix[1][2]);
+		if (rightNumberCount != 6)
+		{
+			printf("Одно или несколько значений не соответствуют маске, повторите ввод\n");
+			while ((getchar()) != '\n');
+		}
+	} while (rightNumberCount != 6);
+	return twoLinearEquationsMatrix;
+}
+
+/// <summary>
+/// Функция обработки пользовательского ввода для задачи нахождения количества пепрестановок объектов
+/// </summary>
+int userInputNumberOfObjectPermutations()
+{
+	printf("Введите количество предметов, для расчета количества вариантов перестановок \n");
+	int NumberOfObjects, rightNumberCount;
+	do
+	{
+		rightNumberCount = scanf_s("%d", &NumberOfObjects);
+		if (rightNumberCount != 1)
+		{
+			printf("Введенное значение не является числом, повторите ввод\n");
+			while ((getchar()) != '\n');
+		}
+		else
+		{
+			if (NumberOfObjects < 0)
+			{
+				printf("Введено отрицательное количество объектов, повторите ввод\n");
+			}
+		}
+	} while (rightNumberCount != 1 || NumberOfObjects < 0);
+	return NumberOfObjects;
+}
+#pragma endregion
+
+#pragma region Функции нахождения решения задач
+
+double* solutionQuadraticEquation(double* coefVector)
+{
+	double D = pow(coefVector[1], 2) - 4 * coefVector[0] * coefVector[2];
 	double* quadraticEquationResult = (double*)malloc(sizeof(double) * 2);
-	quadraticEquationResult[0] = (-b + sqrt(D)) / (2 * a);
-	quadraticEquationResult[1] = (-b - sqrt(D)) / (2 * a);
+	quadraticEquationResult[0] = (-coefVector[1] + sqrt(D)) / (2 * coefVector[0]);
+	quadraticEquationResult[1] = (-coefVector[1] - sqrt(D)) / (2 * coefVector[0]);
 	return quadraticEquationResult;
 }
 
@@ -171,3 +195,27 @@ double* solvingSystemOfTwoLinearEquations(double** TwoLinearEquationsMatrix)
 		- TwoLinearEquationsMatrix[1][1] * systemOfTwoLinearEquationsResult[1]) / TwoLinearEquationsMatrix[1][0];
 	return systemOfTwoLinearEquationsResult;
 }
+
+#pragma endregion
+
+#pragma region Функции вывода решения задачи в консоль
+
+void outputQuadraticEquation(double* resultQuadraticEquation)
+{
+	system("cls");
+	printf("x1 = %lf\nx2 = %lf", resultQuadraticEquation[0], resultQuadraticEquation[1]);
+}
+
+void outputSystemOfTwoLinearEquations(double* resultSystemOfTwoLinearEquations)
+{
+	system("cls");
+	printf("x = %lf\ny = %lf", resultSystemOfTwoLinearEquations[0], resultSystemOfTwoLinearEquations[1]);
+}
+
+void outputNumberOfObjectPermutations(int resultNumberOfObjectPermutations)
+{
+	system("cls");
+	printf("Количество возможных перестановок при введенном числе объектов - %d", resultNumberOfObjectPermutations);
+}
+
+#pragma endregion
