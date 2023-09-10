@@ -91,6 +91,7 @@ void startCalculate(int userChoice)
 }
 
 #pragma region Функции обработки пользовательского ввода параметров для задач
+
 /// <summary>
 /// Функция обработки пользовательского ввода для задачи решения квадратного уравнения
 /// </summary>
@@ -162,10 +163,15 @@ int userInputNumberOfObjectPermutations()
 	} while (rightNumberCount != 1 || NumberOfObjects < 0);
 	return NumberOfObjects;
 }
+
 #pragma endregion
 
 #pragma region Функции нахождения решения задач
 
+/// <summary>
+/// Решение квадратного уравнения
+/// </summary>
+/// <param name="coefVector">Вектор коэффициентов</param>
 double* solutionQuadraticEquation(double* coefVector)
 {
 	double D = pow(coefVector[1], 2) - 4 * coefVector[0] * coefVector[2];
@@ -175,6 +181,10 @@ double* solutionQuadraticEquation(double* coefVector)
 	return quadraticEquationResult;
 }
 
+/// <summary>
+/// Расчет количества перестановок
+/// </summary>
+/// <param name="NumberOfObjects">количество объектов</param>
 int solutionNumberOfObjectPermutations(int NumberOfObjects)
 {
 	int factorial = 1;
@@ -182,6 +192,10 @@ int solutionNumberOfObjectPermutations(int NumberOfObjects)
 	return factorial;
 }
 
+/// <summary>
+/// Решение системы двух линейных уравнений
+/// </summary>
+/// <param name="TwoLinearEquationsMatrix">матрица коэффициентов</param>
 double* solvingSystemOfTwoLinearEquations(double** TwoLinearEquationsMatrix)
 {
 	double multiplyingTheSecondEquation = TwoLinearEquationsMatrix[0][0] / TwoLinearEquationsMatrix[1][0];
@@ -200,18 +214,30 @@ double* solvingSystemOfTwoLinearEquations(double** TwoLinearEquationsMatrix)
 
 #pragma region Функции вывода решения задачи в консоль
 
+/// <summary>
+/// Вывод результата решения квадратного уравнения
+/// </summary>
+/// <param name="resultQuadraticEquation">решение квадратного уравнения</param>
 void outputQuadraticEquation(double* resultQuadraticEquation)
 {
 	system("cls");
 	printf("x1 = %lf\nx2 = %lf", resultQuadraticEquation[0], resultQuadraticEquation[1]);
 }
 
+/// <summary>
+/// Вывод решения системы двух линейных уравнений
+/// </summary>
+/// <param name="resultSystemOfTwoLinearEquations">решение системы линейных уравнений</param>
 void outputSystemOfTwoLinearEquations(double* resultSystemOfTwoLinearEquations)
 {
 	system("cls");
 	printf("x = %lf\ny = %lf", resultSystemOfTwoLinearEquations[0], resultSystemOfTwoLinearEquations[1]);
 }
 
+/// <summary>
+/// Вывод количества возможных перестановок
+/// </summary>
+/// <param name="resultNumberOfObjectPermutations">количество перестановок</param>
 void outputNumberOfObjectPermutations(int resultNumberOfObjectPermutations)
 {
 	system("cls");
